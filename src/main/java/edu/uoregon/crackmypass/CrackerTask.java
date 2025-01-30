@@ -75,6 +75,11 @@ public class CrackerTask implements Runnable {
         list.add(word);
         list.add(StringUtils.capitalize(word));
         list.add(word.toUpperCase());
+        for (String string : new ArrayList<>(list)) {
+            for (int i = 0; i < 1000; i++) {
+                list.add(string + i);
+            }
+        }
         return list;
     }
 
