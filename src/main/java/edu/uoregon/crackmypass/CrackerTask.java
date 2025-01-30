@@ -2,75 +2,78 @@ package edu.uoregon.crackmypass;
 
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
+import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
+import java.util.*;
 
 public class CrackerTask implements Runnable {
 
     private static DecimalFormat formatLong = new DecimalFormat("#,###");
 
-    private boolean running; // Whether the task is currently running or not
-    private String targetHash; // The SHA-256 hash of the password we're trying to crack
+    private List<String> hashes;
+    private List<String> words;
+    private Map<String, String> cracked = new HashMap<>();
+
+//    private boolean running; // Whether the task is currently running or not
     private long attempts = 0; // Current number of attempts we've made
     private long startTime;
-    private HashFunction hasher = Hashing.sha256();
+    private HashFunction hasher = Hashing.md5();
 
-    private final int minLength;
-    private final int maxLength;
-    private final char[] validChars; // All the characters that we'll iterate through
+    public CrackerTask() {
+        try {
+            Path hashFilePath = Paths.get(ClassLoader.getSystemResource("hashes.txt").toURI());
+            hashes = Files.readAllLines(hashFilePath);
+            Collections.sort(hashes);
 
-    public CrackerTask(String targetHash, int minLength, int maxLength, String validCharString) {
-        this.targetHash = targetHash;
-        this.minLength = minLength;
-        this.maxLength = maxLength;
-        this.validChars = validCharString.toCharArray();
+            Path dictFilePath = Paths.get(ClassLoader.getSystemResource("dictionary.txt").toURI());
+            words = Files.readAllLines(dictFilePath);
+        } catch (IOException | NullPointerException | URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void run() {
-        this.running = true;
         this.startTime = System.currentTimeMillis();
-        char[] current = new char[maxLength];  // Array to build the current string
 
-        // Iterate over all possible lengths from minLength to maxLength
-        for (int length = minLength; length <= maxLength; length++) {
-            generateStrings(validChars, current, length, 0);
-            if (!this.running) return;
+        for (String word : words) {
+            List<String> passwordTries = generateStrings(word);
+
+            for (String pswd : passwordTries) {
+                ++attempts;
+                int index = Collections.binarySearch(hashes, hasher.hashString(pswd, StandardCharsets.UTF_8).toString());
+
+                if (index >= 0) {
+                    cracked.put(hashes.get(index), pswd);
+                    long totalMs = System.currentTimeMillis() - startTime;
+                    System.out.println();
+                    System.out.println("Cracked a hash: \"" + pswd + "\" -> " + hashes.get(index));
+                    System.out.println("Total of " + cracked.size() + " found in " + totalMs + " ms");
+                }
+            }
         }
 
-        System.out.println("Finished all " + attempts + " attempts.");
-        System.out.println("Could not find password with hash: " + targetHash);
+        long totalMs = System.currentTimeMillis() - startTime;
+        System.out.println();
+        System.out.println("FINISHED!");
+        System.out.println("Found " + cracked.size() + " passwords from " + formatLong.format(attempts) + " attempts in " + totalMs + " ms!");
         Main.shutdown();
     }
 
-    private void generateStrings(char[] validChars, char[] current, int targetLength, int currentIndex) {
-        if (!this.running) return;
-
-        // If current length equals target length, test the current string
-        if (currentIndex == targetLength) {
-            if (++attempts % 10000000 == 0) {
-                System.out.println();
-                System.out.println("Current length: " + targetLength);
-                System.out.println("Attempts: " + formatLong.format(attempts));
-                System.out.println("Seconds elapsed: " + ((System.currentTimeMillis() - startTime) / 1000));
-            }
-            if (hasher.hashString(new String(current, 0, targetLength), StandardCharsets.UTF_8).toString().equals(targetHash)) {
-                long totalMs = System.currentTimeMillis() - startTime;
-                System.out.println();
-                System.out.println("Found the password with " + formatLong.format(attempts) + " attempts in " + totalMs + " ms!");
-                System.out.println("Your password was: " + new String(current, 0, targetLength));
-                Main.shutdown();
-                this.running = false;
-            }
-            return;
-        }
-
-        // Iterate through each character in validChars and build strings
-        for (char c : validChars) {
-            current[currentIndex] = c; // Set the character at the current index
-            generateStrings(validChars, current, targetLength, currentIndex + 1);
-        }
+    // Generate a list of possible passwords given a word from the dictionary
+    private List<String> generateStrings(String word) {
+        List<String> list = new ArrayList<>();
+        list.add(word);
+        list.add(StringUtils.capitalize(word));
+        list.add(word.toUpperCase());
+        return list;
     }
 
 }
