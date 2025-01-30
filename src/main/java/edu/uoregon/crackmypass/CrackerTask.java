@@ -48,6 +48,7 @@ public class CrackerTask implements Runnable {
 
             for (String pswd : passwordTries) {
                 ++attempts;
+                // Use binary search to search hashes for O(logn) time
                 int index = Collections.binarySearch(hashes, hasher.hashString(pswd, StandardCharsets.UTF_8).toString());
 
                 if (index >= 0) {
@@ -69,6 +70,7 @@ public class CrackerTask implements Runnable {
 
     // Generate a list of possible passwords given a word from the dictionary
     private List<String> generateStrings(String word) {
+        // We will make this more complex later -- for right now, it's a simple dictionary attack
         List<String> list = new ArrayList<>();
         list.add(word);
         list.add(StringUtils.capitalize(word));
