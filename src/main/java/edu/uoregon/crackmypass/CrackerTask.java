@@ -2,6 +2,8 @@ package edu.uoregon.crackmypass;
 
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
+import edu.uoregon.crackmypass.menu.MainMenu;
+import edu.uoregon.crackmypass.menu.PanelOutput;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -15,8 +17,6 @@ import java.util.*;
 
 public class CrackerTask implements Runnable {
 
-    private static DecimalFormat formatLong = new DecimalFormat("#,###");
-
     private List<String> hashes;
     private List<String> words;
     private Map<String, String> cracked = new HashMap<>();
@@ -27,16 +27,8 @@ public class CrackerTask implements Runnable {
     private HashFunction hasher = Hashing.md5();
 
     public CrackerTask() {
-        try {
-            Path hashFilePath = Paths.get(ClassLoader.getSystemResource("hashes.txt").toURI());
-            hashes = Files.readAllLines(hashFilePath);
-            Collections.sort(hashes);
-
-            Path dictFilePath = Paths.get(ClassLoader.getSystemResource("dictionary.txt").toURI());
-            words = Files.readAllLines(dictFilePath);
-        } catch (IOException | NullPointerException | URISyntaxException e) {
-            e.printStackTrace();
-        }
+        this.hashes = Cracker.getHashes();
+        this.words = Cracker.getWords();
     }
 
     @Override
@@ -47,7 +39,10 @@ public class CrackerTask implements Runnable {
             List<String> passwordTries = generateStrings(word);
 
             for (String pswd : passwordTries) {
-                ++attempts;
+                if (++attempts % 10000 == 0) {
+                    PanelOutput.setTriedAmount(attempts);
+                }
+
                 // Use binary search to search hashes for O(logn) time
                 int index = Collections.binarySearch(hashes, hasher.hashString(pswd, StandardCharsets.UTF_8).toString());
 
@@ -57,6 +52,8 @@ public class CrackerTask implements Runnable {
                     System.out.println();
                     System.out.println("Cracked a hash: \"" + pswd + "\" -> " + hashes.get(index));
                     System.out.println("Total of " + cracked.size() + " found in " + totalMs + " ms");
+                    PanelOutput.addLine(pswd + " -> " + hashes.get(index));
+                    PanelOutput.setFoundAmount(cracked.size());
                 }
             }
         }
@@ -64,8 +61,8 @@ public class CrackerTask implements Runnable {
         long totalMs = System.currentTimeMillis() - startTime;
         System.out.println();
         System.out.println("FINISHED!");
-        System.out.println("Found " + cracked.size() + " passwords from " + formatLong.format(attempts) + " attempts in " + totalMs + " ms!");
-        Main.shutdown();
+        System.out.println("Found " + cracked.size() + " passwords from " + Util.formatLong(attempts) + " attempts in " + totalMs + " ms!");
+        Cracker.stopCracking();
     }
 
     // Generate a list of possible passwords given a word from the dictionary
@@ -76,7 +73,7 @@ public class CrackerTask implements Runnable {
         list.add(StringUtils.capitalize(word));
         list.add(word.toUpperCase());
         for (String string : new ArrayList<>(list)) {
-            for (int i = 0; i < 1000; i++) {
+            for (int i = 0; i < 100; i++) {
                 list.add(string + i);
             }
         }
