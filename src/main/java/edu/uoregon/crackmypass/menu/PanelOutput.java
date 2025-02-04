@@ -67,7 +67,7 @@ public class PanelOutput extends JPanel {
         setFoundAmount(0);
         setTriedAmount(0);
         this.setPreferredSize(new Dimension(384, 320));
-        this.setBackground(new Color(128, 255, 128));
+        this.setBackground(new Color(160, 255, 160));
     }
 
     public static void addLine(String text) {

@@ -1,5 +1,7 @@
 package edu.uoregon.crackmypass;
 
+import edu.uoregon.crackmypass.menu.PanelStart;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -27,6 +29,7 @@ public class Cracker {
 
     public static void stopCracking() {
         crackingThread.shutdown();
+        PanelStart.onComplete();
     }
 
     public static List<String> getHashes() {

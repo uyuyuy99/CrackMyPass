@@ -26,6 +26,9 @@ public class PanelLoadFiles extends JPanel {
         c.gridx = 0; c.gridy = 1;
         btnLoadHashes = new JButton("Load Hashes");
         btnLoadHashes.setToolTipText("Load password hashes from a file.");
+        btnLoadHashes.setIcon(new ImageIcon(ClassLoader.getSystemResource("icon/hash.png")));
+        btnLoadHashes.setIconTextGap(6);
+        btnLoadHashes.setMargin(new Insets(4, 8, 4, 8));
         add(btnLoadHashes, c);
         btnLoadHashes.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
@@ -33,12 +36,12 @@ public class PanelLoadFiles extends JPanel {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 if (Cracker.loadHashes(fileChooser.getSelectedFile())) {
-                    JOptionPane.showMessageDialog(this,
+                    JOptionPane.showMessageDialog(mainMenu,
                             "Successfully loaded " + Util.formatLong(Cracker.getHashes().size()) + " hashes!",
                             "Success!",
                             JOptionPane.PLAIN_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(this,
+                    JOptionPane.showMessageDialog(mainMenu,
                             "Error loading hashes.\nPlease make sure your file is formatted correctly.",
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
@@ -58,6 +61,9 @@ public class PanelLoadFiles extends JPanel {
         c.gridx = 0; c.gridy = 2;
         btnLoadWords = new JButton("Load Dictionary");
         btnLoadWords.setToolTipText("Load a custom dictionary file.");
+        btnLoadWords.setIcon(new ImageIcon(ClassLoader.getSystemResource("icon/book.png")));
+        btnLoadWords.setIconTextGap(10);
+        btnLoadWords.setMargin(new Insets(4, 8, 4, 8));
         add(btnLoadWords, c);
         btnLoadWords.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
@@ -65,12 +71,12 @@ public class PanelLoadFiles extends JPanel {
 
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 if (Cracker.loadWords(fileChooser.getSelectedFile())) {
-                    JOptionPane.showMessageDialog(this,
+                    JOptionPane.showMessageDialog(mainMenu,
                             "Successfully loaded " + Util.formatLong(Cracker.getWords().size()) + " words!",
                             "Success!",
                             JOptionPane.PLAIN_MESSAGE);
                 } else {
-                    JOptionPane.showMessageDialog(this,
+                    JOptionPane.showMessageDialog(mainMenu,
                             "Error loading word list.\nPlease make sure your file is formatted correctly.",
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
