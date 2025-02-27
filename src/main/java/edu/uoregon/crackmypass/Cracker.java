@@ -43,8 +43,9 @@ public class Cracker {
     public static List<String> getHashes() {
         if (hashes == null) {
             try {
-                Path hashFilePath = Paths.get(ClassLoader.getSystemResource("hashes.txt").toURI());
+                Path hashFilePath = Paths.get(ClassLoader.getSystemResource("3938.0.found").toURI());
                 hashes = Files.readAllLines(hashFilePath);
+                hashes.replaceAll(hash -> hash.substring(0, hash.indexOf(":")));
                 Collections.sort(hashes);
             } catch (IOException | NullPointerException | URISyntaxException e) {
                 e.printStackTrace();
