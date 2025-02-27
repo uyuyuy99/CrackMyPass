@@ -22,12 +22,11 @@ public class PanelSettings extends JPanel {
         c = new GridBagConstraints();
         setLayout(layout);
 
-        Insets padding = new Insets(8, 8, 8, 8);
         Dimension size = new Dimension(128, 48);
         Font font;
 
         c.gridx = 0; c.gridy = 0;
-        c.insets = new Insets(12, 8, 0, 0);
+        c.insets = new Insets(4, 4, 4, 4);
         btnAppend = new JButton("Append");
 //        btnAppend.setMargin(padding);
         btnAppend.setPreferredSize(size);

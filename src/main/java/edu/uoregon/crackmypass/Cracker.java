@@ -36,6 +36,7 @@ public class Cracker {
     }
 
     public static void stopCracking() {
+        CrackerTask.setRunning(false);
         crackingThread.shutdown();
         PanelStart.onComplete();
     }

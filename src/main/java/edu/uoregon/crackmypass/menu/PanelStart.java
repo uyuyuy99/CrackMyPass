@@ -11,6 +11,7 @@ public class PanelStart extends JPanel {
     private static GridBagConstraints c;
 
     private static JButton btnStart;
+    private static JButton btnStop;
 
     public PanelStart() {
         layout = new GridBagLayout();
@@ -18,6 +19,7 @@ public class PanelStart extends JPanel {
         setLayout(layout);
 
         c.gridx = 0; c.gridy = 0;
+        c.insets = new Insets(4, 4, 4, 4);
         btnStart = new JButton("Start");
         btnStart.setIcon(new ImageIcon(ClassLoader.getSystemResource("icon/start.png")));
         btnStart.setIconTextGap(10);
@@ -26,15 +28,30 @@ public class PanelStart extends JPanel {
         btnStart.setFont(startFont);
         add(btnStart, c);
         btnStart.addActionListener(e -> {
+            PanelOutput.reset();
             btnStart.setEnabled(false);
+            btnStop.setEnabled(true);
             Cracker.startCracking();
         });
 
-//        setBackground(Color.YELLOW);
+        c.gridx = 1; c.gridy = 0;
+        btnStop = new JButton("Stop");
+        btnStop.setIcon(new ImageIcon(ClassLoader.getSystemResource("icon/stop.png")));
+        btnStop.setIconTextGap(10);
+        btnStop.setMargin(new Insets(8, 20, 8, 20));
+        btnStop.setFont(startFont);
+        btnStop.setEnabled(false);
+        add(btnStop, c);
+        btnStop.addActionListener(e -> {
+            btnStop.setEnabled(false);
+            btnStart.setEnabled(true);
+            Cracker.stopCracking();
+        });
     }
 
     public static void onComplete() {
         btnStart.setEnabled(true);
+        btnStop.setEnabled(false);
     }
 
 }

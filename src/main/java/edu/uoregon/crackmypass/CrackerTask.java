@@ -21,7 +21,7 @@ public class CrackerTask implements Runnable {
     private List<String> words;
     private Map<String, String> cracked = new HashMap<>();
 
-//    private boolean running; // Whether the task is currently running or not
+    private static boolean running = false; // Whether the task is currently running or not
     private long attempts = 0; // Current number of attempts we've made
     private long startTime;
     private HashFunction hasher = Hashing.md5();
@@ -31,11 +31,20 @@ public class CrackerTask implements Runnable {
         this.words = Cracker.getWords();
     }
 
+    public static synchronized boolean isRunning() {
+        return running;
+    }
+    public static synchronized void setRunning(boolean newValue) {
+        running = newValue;
+    }
+
     @Override
     public void run() {
+        setRunning(true);
         this.startTime = System.currentTimeMillis();
 
         for (String word : words) {
+            if (!isRunning()) return;
             List<String> passwordTries = generateStrings(word);
 
             for (String pswd : passwordTries) {

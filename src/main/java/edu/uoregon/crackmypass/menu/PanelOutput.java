@@ -83,4 +83,10 @@ public class PanelOutput extends JPanel {
         labelTriedAmount.setText(Util.formatLong(amount));
     }
 
+    public static void reset() {
+        labelFoundAmount.setText("");
+        labelTriedAmount.setText("");
+        textOutput.setText("");
+    }
+
 }
