@@ -36,11 +36,11 @@ public class MainMenu extends JFrame {
         panelLoadFiles = new PanelLoadFiles(this);
         panel.add(panelLoadFiles, c);
 
-//        c.gridx = 0; c.gridy = 1;
-//        c.anchor = GridBagConstraints.PAGE_START;
-//        c.fill = GridBagConstraints.HORIZONTAL;
-//        panelSettings = new PanelSettings(this);
-//        panel.add(panelSettings, c);
+        c.gridx = 0; c.gridy = 1;
+        c.anchor = GridBagConstraints.PAGE_START;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        panelSettings = new PanelSettings(this);
+        panel.add(panelSettings, c);
 
         c.gridx = 0; c.gridy = 2;
         c.anchor = GridBagConstraints.CENTER;

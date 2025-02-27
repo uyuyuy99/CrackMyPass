@@ -10,6 +10,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -20,8 +21,10 @@ public class Cracker {
     private static ExecutorService crackingThread;
     private static List<String> hashes;
     private static List<String> words;
-    private static int minAddNumbers = -1;
-    private static int maxAddNumbers = -1;
+
+    // Settings
+    private static List<Appendage> appends;
+    private static List<Appendage> prepends;
 
     public static void startCracking() {
         // Create runnable task & create new thread to run it on
@@ -84,11 +87,46 @@ public class Cracker {
         return true;
     }
 
-    public static void setMinAddNumbers(int minAddNumbers) {
-        Cracker.minAddNumbers = minAddNumbers;
+    public static List<Appendage> getAppends() {
+        if (appends == null) {
+            appends = new ArrayList<>();
+            appends.add(new Appendage(0, 100));
+            appends.add(new Appendage(1925, 2025));
+            appends.add(new Appendage("lover"));
+            appends.add(new Appendage("Lover"));
+            appends.add(new Appendage("good"));
+            appends.add(new Appendage("Good"));
+            appends.add(new Appendage("bad"));
+            appends.add(new Appendage("Bad"));
+        }
+        return appends;
     }
 
-    public static void setMaxAddNumbers(int maxAddNumbers) {
-        Cracker.maxAddNumbers = maxAddNumbers;
+    public static void setAppends(String[] lines) {
+        appends.clear();
+        for (String line : lines) {
+            if (line.isEmpty()) continue;
+            appends.add(Appendage.fromDisplayText(line));
+        }
     }
+
+    public static List<Appendage> getPrepends() {
+        if (prepends == null) {
+            prepends = new ArrayList<>();
+            prepends.add(new Appendage(0, 9));
+            prepends.add(new Appendage("ilove"));
+            prepends.add(new Appendage("Ilove"));
+            prepends.add(new Appendage("ILove"));
+        }
+        return prepends;
+    }
+
+    public static void setPrepends(String[] lines) {
+        prepends.clear();
+        for (String line : lines) {
+            if (line.isEmpty()) continue;
+            prepends.add(Appendage.fromDisplayText(line));
+        }
+    }
+
 }

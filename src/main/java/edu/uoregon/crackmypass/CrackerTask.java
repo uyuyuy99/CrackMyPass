@@ -66,17 +66,38 @@ public class CrackerTask implements Runnable {
     }
 
     // Generate a list of possible passwords given a word from the dictionary
-    private List<String> generateStrings(String word) {
-        // We will make this more complex later -- for right now, it's a simple dictionary attack
+    private List<String> generateStrings(String baseWord) {
         List<String> list = new ArrayList<>();
-        list.add(word);
-        list.add(StringUtils.capitalize(word));
-        list.add(word.toUpperCase());
-        for (String string : new ArrayList<>(list)) {
-            for (int i = 0; i < 100; i++) {
-                list.add(string + i);
+        list.add(baseWord);
+
+        // Add capitalized iterations
+        list.add(StringUtils.capitalize(baseWord));
+        list.add(baseWord.toUpperCase());
+
+        // Add iterations w/ appendages
+        ListIterator<String> iter = list.listIterator();
+        while (iter.hasNext()) {
+            String word = iter.next();
+
+            for (Appendage append : Cracker.getAppends()) {
+                for (String string : append.getStrings()) {
+                    iter.add(word + string);
+                }
             }
         }
+
+        // Add iterations w/ prependages
+        iter = list.listIterator();
+        while (iter.hasNext()) {
+            String word = iter.next();
+
+            for (Appendage prepend : Cracker.getPrepends()) {
+                for (String string : prepend.getStrings()) {
+                    iter.add(string + word);
+                }
+            }
+        }
+
         return list;
     }
 
