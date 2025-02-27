@@ -71,8 +71,12 @@ public class CrackerTask implements Runnable {
         list.add(baseWord);
 
         // Add capitalized iterations
-        list.add(StringUtils.capitalize(baseWord));
-        list.add(baseWord.toUpperCase());
+        if (Cracker.getCapFirst()) {
+            list.add(StringUtils.capitalize(baseWord));
+        }
+        if (Cracker.getCapAll()) {
+            list.add(baseWord.toUpperCase());
+        }
 
         // Add iterations w/ appendages
         ListIterator<String> iter = list.listIterator();

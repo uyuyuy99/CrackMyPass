@@ -23,8 +23,10 @@ public class Cracker {
     private static List<String> words;
 
     // Settings
-    private static List<Appendage> appends;
-    private static List<Appendage> prepends;
+    private static List<Appendage> appends; // add strings/numbers to end of word
+    private static List<Appendage> prepends;// add strings/numbers to beginning of word
+    private static boolean capFirst = true; // capitalize first letter
+    private static boolean capAll = true; // capitalize all letters
 
     public static void startCracking() {
         // Create runnable task & create new thread to run it on
@@ -129,4 +131,19 @@ public class Cracker {
         }
     }
 
+    public static boolean getCapFirst() {
+        return capFirst;
+    }
+
+    public static void setCapFirst(boolean capFirst) {
+        Cracker.capFirst = capFirst;
+    }
+
+    public static boolean getCapAll() {
+        return capAll;
+    }
+
+    public static void setCapAll(boolean capAll) {
+        Cracker.capAll = capAll;
+    }
 }
