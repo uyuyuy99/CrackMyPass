@@ -1,6 +1,7 @@
 package edu.uoregon.crackmypass;
 
 import edu.uoregon.crackmypass.menu.PanelStart;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,6 +20,8 @@ public class Cracker {
     private static ExecutorService crackingThread;
     private static List<String> hashes;
     private static List<String> words;
+    private static int minAddNumbers = -1;
+    private static int maxAddNumbers = -1;
 
     public static void startCracking() {
         // Create runnable task & create new thread to run it on
@@ -48,7 +51,7 @@ public class Cracker {
     public static List<String> getWords() {
         if (words == null) {
             try {
-                Path dictFilePath = Paths.get(ClassLoader.getSystemResource("dictionary.txt").toURI());
+                Path dictFilePath = Paths.get(ClassLoader.getSystemResource("words.txt").toURI());
                 words = Files.readAllLines(dictFilePath);
             } catch (IOException | NullPointerException | URISyntaxException e) {
                 e.printStackTrace();
@@ -60,6 +63,9 @@ public class Cracker {
     public static boolean loadHashes(File file) {
         try {
             hashes = Files.readAllLines(file.toPath());
+            if (FilenameUtils.getExtension(file.getName()).equalsIgnoreCase("found")) {
+                hashes.replaceAll(hash -> hash.substring(0, hash.indexOf(":")));
+            }
             Collections.sort(hashes);
         } catch (IOException e) {
             e.printStackTrace();
@@ -78,4 +84,11 @@ public class Cracker {
         return true;
     }
 
+    public static void setMinAddNumbers(int minAddNumbers) {
+        Cracker.minAddNumbers = minAddNumbers;
+    }
+
+    public static void setMaxAddNumbers(int maxAddNumbers) {
+        Cracker.maxAddNumbers = maxAddNumbers;
+    }
 }
