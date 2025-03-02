@@ -3,6 +3,7 @@ package edu.uoregon.crackmypass.menu;
 import edu.uoregon.crackmypass.menu.settings.PanelSettingAppend;
 import edu.uoregon.crackmypass.menu.settings.PanelSettingCapitalize;
 import edu.uoregon.crackmypass.menu.settings.PanelSettingPrepend;
+import edu.uoregon.crackmypass.menu.settings.PanelSettingsReplace;
 
 import javax.swing.*;
 import java.awt.*;
@@ -87,6 +88,16 @@ public class PanelSettings extends JPanel {
 
             if (result == JOptionPane.OK_OPTION) {
                 panelCapitalize.save();
+            }
+        });
+
+        btnReplace.addActionListener((e) -> {
+            PanelSettingsReplace panelReplace = new PanelSettingsReplace();
+            int result = JOptionPane.showConfirmDialog(mainMenu, panelReplace,
+                    "Replace Text", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+            if (result == JOptionPane.OK_OPTION) {
+                panelReplace.save();
             }
         });
     }

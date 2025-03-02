@@ -1,12 +1,11 @@
 package edu.uoregon.crackmypass;
 
-import edu.uoregon.crackmypass.menu.PanelOutput;
 import edu.uoregon.crackmypass.menu.PanelStart;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -28,6 +27,7 @@ public class Cracker {
     private static List<Appendage> prepends;// add strings/numbers to beginning of word
     private static boolean capFirst = true; // capitalize first letter
     private static boolean capAll = true; // capitalize all letters
+    private static List<Pair<String, String>> replacements; // replaces strings in word
 
     public static void startCracking() {
         // Create runnable task & create new thread to run it on
@@ -149,4 +149,22 @@ public class Cracker {
     public static void setCapAll(boolean capAll) {
         Cracker.capAll = capAll;
     }
+
+    public static List<Pair<String, String>> getReplacements() {
+        if (replacements == null) {
+            replacements = new ArrayList<>();
+            replacements.add(Pair.of("s", "$"));
+            replacements.add(Pair.of("S", "$"));
+            replacements.add(Pair.of("e", "3"));
+            replacements.add(Pair.of("E", "3"));
+            replacements.add(Pair.of("a", "@"));
+            replacements.add(Pair.of("A", "@"));
+            replacements.add(Pair.of("o", "0"));
+            replacements.add(Pair.of("O", "0"));
+            replacements.add(Pair.of("i", "1"));
+            replacements.add(Pair.of("I", "1"));
+        }
+        return replacements;
+    }
+
 }
