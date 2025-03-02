@@ -1,5 +1,6 @@
 package edu.uoregon.crackmypass;
 
+import edu.uoregon.crackmypass.menu.PanelOutput;
 import edu.uoregon.crackmypass.menu.PanelStart;
 import org.apache.commons.io.FilenameUtils;
 

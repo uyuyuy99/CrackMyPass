@@ -21,7 +21,7 @@ public class PanelSettingAppend extends JPanel {
         setLayout(layout);
 
         final String html = "<html><body style='width: %1spx'>%1s";
-        String text = "<center>Each new line of text will be appended to the end of each word." +
+        String text = "<center>Each new line of text will be appended to the end of each word. " +
                 "You can specify ranges of numbers to append, like <b>0 - 100</b></center>";
         JLabel label = new JLabel(String.format(html, 200, text));
         c.gridx = 0; c.gridy = 0;

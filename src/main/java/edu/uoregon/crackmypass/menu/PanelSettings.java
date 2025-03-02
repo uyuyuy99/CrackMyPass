@@ -27,22 +27,22 @@ public class PanelSettings extends JPanel {
 
         c.gridx = 0; c.gridy = 0;
         c.insets = new Insets(4, 4, 4, 4);
+        btnPrepend = new JButton("Prepend");
+        btnPrepend.setPreferredSize(size);
+        btnPrepend.setIcon(new ImageIcon(ClassLoader.getSystemResource("icon/chevron_left.png")));
+        btnPrepend.setIconTextGap(10);
+        font = btnPrepend.getFont().deriveFont(14f);
+        btnPrepend.setFont(font);
+        add(btnPrepend, c);
+
+        c.gridx = 1; c.gridy = 0;
         btnAppend = new JButton("Append");
 //        btnAppend.setMargin(padding);
         btnAppend.setPreferredSize(size);
         btnAppend.setIcon(new ImageIcon(ClassLoader.getSystemResource("icon/chevron.png")));
         btnAppend.setIconTextGap(10);
-        font = btnAppend.getFont().deriveFont(14f);
         btnAppend.setFont(font);
         add(btnAppend, c);
-
-        c.gridx = 1; c.gridy = 0;
-        btnPrepend = new JButton("Prepend");
-        btnPrepend.setPreferredSize(size);
-        btnPrepend.setIcon(new ImageIcon(ClassLoader.getSystemResource("icon/chevron_left.png")));
-        btnPrepend.setIconTextGap(10);
-        btnPrepend.setFont(font);
-        add(btnPrepend, c);
 
         c.gridx = 0; c.gridy = 1;
         btnCapitalize = new JButton("Capitalize");

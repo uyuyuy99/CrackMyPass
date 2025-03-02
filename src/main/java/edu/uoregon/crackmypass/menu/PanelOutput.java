@@ -28,6 +28,7 @@ public class PanelOutput extends JPanel {
         c.anchor = GridBagConstraints.EAST;
         labelFoundText = new JLabel("Passwords Cracked:");
         Font labelFont = labelFoundText.getFont().deriveFont(Font.BOLD, 14f);
+        labelFont = new Font("Monospaced", Font.BOLD, 16);
         labelFoundText.setFont(labelFont);
         add(labelFoundText, c);
 
@@ -70,16 +71,16 @@ public class PanelOutput extends JPanel {
         this.setBackground(new Color(160, 255, 160));
     }
 
-    public static void addLine(String text) {
+    public static synchronized void addLine(String text) {
         textOutput.append((textOutput.getText().isEmpty() ? "" : "\n") + text);
         textOutput.setCaretPosition(Math.max(0, textOutput.getText().lastIndexOf("\n") + 1));
     }
 
-    public static void setFoundAmount(long amount) {
+    public static synchronized void setFoundAmount(long amount) {
         labelFoundAmount.setText(Util.formatLong(amount));
     }
 
-    public static void setTriedAmount(long amount) {
+    public static synchronized void setTriedAmount(long amount) {
         labelTriedAmount.setText(Util.formatLong(amount));
     }
 

@@ -31,20 +31,16 @@ public class CrackerTask implements Runnable {
         this.words = Cracker.getWords();
     }
 
-    public static synchronized boolean isRunning() {
-        return running;
-    }
-    public static synchronized void setRunning(boolean newValue) {
-        running = newValue;
-    }
-
     @Override
     public void run() {
         setRunning(true);
         this.startTime = System.currentTimeMillis();
 
         for (String word : words) {
-            if (!isRunning()) return;
+            if (!isRunning()) {
+                PanelOutput.setTriedAmount(attempts);
+                return;
+            }
             List<String> passwordTries = generateStrings(word);
 
             for (String pswd : passwordTries) {
@@ -67,6 +63,7 @@ public class CrackerTask implements Runnable {
             }
         }
 
+        PanelOutput.setTriedAmount(attempts);
         long totalMs = System.currentTimeMillis() - startTime;
         System.out.println();
         System.out.println("FINISHED!");
@@ -112,6 +109,14 @@ public class CrackerTask implements Runnable {
         }
 
         return list;
+    }
+
+    public static synchronized boolean isRunning() {
+        return running;
+    }
+
+    public static synchronized void setRunning(boolean newValue) {
+        running = newValue;
     }
 
 }

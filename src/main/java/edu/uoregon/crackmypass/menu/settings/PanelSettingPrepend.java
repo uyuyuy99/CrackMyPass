@@ -20,7 +20,7 @@ public class PanelSettingPrepend extends JPanel {
         setLayout(layout);
 
         final String html = "<html><body style='width: %1spx'>%1s";
-        String text = "<center>Each new line of text will be prepended to the beginning of each word." +
+        String text = "<center>Each new line of text will be prepended to the beginning of each word. " +
                 "You can specify ranges of numbers to prepend, like <b>0 - 100</b></center>";
         JLabel label = new JLabel(String.format(html, 200, text));
         c.gridx = 0; c.gridy = 0;
