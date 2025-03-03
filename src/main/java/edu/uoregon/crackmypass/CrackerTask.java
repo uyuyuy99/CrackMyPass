@@ -5,6 +5,7 @@ import com.google.common.hash.Hashing;
 import edu.uoregon.crackmypass.menu.MainMenu;
 import edu.uoregon.crackmypass.menu.PanelOutput;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -75,6 +76,19 @@ public class CrackerTask implements Runnable {
     private List<String> generateStrings(String baseWord) {
         List<String> list = new ArrayList<>();
         list.add(baseWord);
+
+        // Swap out (replace) characters/strings in the word
+        List<Pair<String, String>> replacements = Cracker.getReplacements();
+        if (!replacements.isEmpty()) {
+            String word = baseWord;
+            for (Pair<String, String> repl : replacements) {
+                word = word.replace(repl.getLeft(), repl.getRight());
+            }
+            if (!word.equals(baseWord)) {
+                list.add(word);
+            }
+//            list.remove(baseWord); // TODO testing
+        }
 
         // Add capitalized iterations
         if (Cracker.getCapFirst()) {

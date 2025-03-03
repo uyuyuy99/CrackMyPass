@@ -167,4 +167,16 @@ public class Cracker {
         return replacements;
     }
 
+    public static void setReplacements(List<Pair<String, String>> replacements) {
+        replacements.removeIf(pair -> pair.getLeft().isEmpty());
+        Cracker.replacements = replacements;
+    }
+
+    //    public static void setReplacements(Object[][] data) {
+//        replacements.clear();
+//        for (Object[] row : data) {
+//            replacements.add(Pair.of((String) row[0], (String) row[1]));
+//        }
+//    }
+
 }
