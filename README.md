@@ -8,6 +8,8 @@ You can clone this repository onto your machine using
 Alternatively download a zip file of the repository with this link:
 [CrackMyPass](https://github.com/uyuyuy99/CrackMyPass/archive/refs/heads/main.zip)
 
+Run using Java with your preferred IDE.
+
 ## Interface
 The CrackMyPass runs a dictionary attack against a hash table of passwords and displays the passwords it cracks.
 
