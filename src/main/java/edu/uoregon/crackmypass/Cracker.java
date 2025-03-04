@@ -91,12 +91,13 @@ public class Cracker {
             appends = new ArrayList<>();
             appends.add(new Appendage(0, 100));
             appends.add(new Appendage(1925, 2025));
-            appends.add(new Appendage("lover"));
-            appends.add(new Appendage("Lover"));
-            appends.add(new Appendage("good"));
-            appends.add(new Appendage("Good"));
-            appends.add(new Appendage("bad"));
-            appends.add(new Appendage("Bad"));
+            appends.add(new Appendage("Guy"));
+            appends.add(new Appendage("guy"));
+            appends.add(new Appendage("Girl"));
+            appends.add(new Appendage("girl"));
+            appends.add(new Appendage("Man"));
+            appends.add(new Appendage("man"));
+            appends.add(new Appendage("!"));
         }
         return appends;
     }
@@ -123,7 +124,12 @@ public class Cracker {
             prepends.add(new Appendage(0, 9));
             prepends.add(new Appendage("ilove"));
             prepends.add(new Appendage("Ilove"));
-            prepends.add(new Appendage("ILove"));
+            prepends.add(new Appendage("Cool"));
+            prepends.add(new Appendage("cool"));
+            prepends.add(new Appendage("Bad"));
+            prepends.add(new Appendage("bad"));
+            prepends.add(new Appendage("Good"));
+            prepends.add(new Appendage("good"));
         }
         return prepends;
     }
