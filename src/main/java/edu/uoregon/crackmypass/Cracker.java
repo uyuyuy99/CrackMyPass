@@ -37,20 +37,6 @@ public class Cracker {
         CrackerTask crackerTask = new CrackerTask();
         crackingThread = Executors.newFixedThreadPool(1);
         crackingThread.submit(crackerTask);
-
-        System.out.println("Prepends:");
-        for (Appendage prepend : getPrepends()) {
-            for (String string : prepend.getStrings()) {
-                System.out.println("  '" + string + "'");
-            }
-        }
-
-        System.out.println("Appends:");
-        for (Appendage append : getAppends()) {
-            for (String string : append.getStrings()) {
-                System.out.println("  '" + string + "'");
-            }
-        }
     }
 
     public static void stopCracking() {

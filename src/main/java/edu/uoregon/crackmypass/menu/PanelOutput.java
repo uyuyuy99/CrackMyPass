@@ -3,6 +3,7 @@ package edu.uoregon.crackmypass.menu;
 import edu.uoregon.crackmypass.Util;
 
 import javax.swing.*;
+import javax.swing.text.*;
 import java.awt.*;
 
 public class PanelOutput extends JPanel {
@@ -14,8 +15,11 @@ public class PanelOutput extends JPanel {
     private static JLabel labelFoundAmount;
     private static JLabel labelTriedText;
     private static JLabel labelTriedAmount;
-    private static JScrollPane paneOutput;
-    private static JTextArea textOutput;
+    private static JScrollPane scrollPane;
+    private static JTextPane textOutput;
+
+    private static Style stylePassword;
+    private static Style styleHash;
 
     public PanelOutput() {
         layout = new GridBagLayout();
@@ -58,12 +62,27 @@ public class PanelOutput extends JPanel {
         c.insets = new Insets(0, 8, 8, 8);
         c.anchor = GridBagConstraints.SOUTH;
         c.fill = GridBagConstraints.BOTH;
-        textOutput = new JTextArea();
+        textOutput = new JTextPane();
+        textOutput.setEditable(false);
         textOutput.setForeground(Color.GREEN);
         textOutput.setBackground(Color.BLACK);
-        paneOutput = new JScrollPane(textOutput);
-        paneOutput.setPreferredSize(new Dimension(384, 320));
-        add(paneOutput, c);
+        textOutput.setEditorKit(new NoWrapEditorKit());
+        scrollPane = new JScrollPane(textOutput);
+        scrollPane.setPreferredSize(new Dimension(384, 320));
+        new SmartScroller(scrollPane);
+        add(scrollPane, c);
+
+        StyledDocument doc = textOutput.getStyledDocument();
+
+        stylePassword = doc.addStyle("password", null);
+        StyleConstants.setForeground(stylePassword, Color.GREEN);
+        StyleConstants.setFontSize(stylePassword, 16);
+        StyleConstants.setFontFamily(stylePassword, "Monospaced");
+
+        styleHash = doc.addStyle("hash", null);
+        StyleConstants.setForeground(styleHash, Color.GRAY);
+        StyleConstants.setFontSize(styleHash, 12);
+        StyleConstants.setFontFamily(styleHash, "Monospaced");
 
         setFoundAmount(0);
         setTriedAmount(0);
@@ -71,9 +90,16 @@ public class PanelOutput extends JPanel {
         this.setBackground(new Color(160, 255, 160));
     }
 
-    public static synchronized void addLine(String text) {
-        textOutput.append((textOutput.getText().isEmpty() ? "" : "\n") + text);
-        textOutput.setCaretPosition(Math.max(0, textOutput.getText().lastIndexOf("\n") + 1));
+    public static synchronized void addLine(String password, String hash) {
+        SwingUtilities.invokeLater(() -> {
+            StyledDocument doc = textOutput.getStyledDocument();
+            try {
+                doc.insertString(doc.getLength(), password, stylePassword);
+                doc.insertString(doc.getLength(), " (" + hash + ")\n", styleHash);
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public static synchronized void setFoundAmount(long amount) {
@@ -88,6 +114,50 @@ public class PanelOutput extends JPanel {
         labelFoundAmount.setText("");
         labelTriedAmount.setText("");
         textOutput.setText("");
+    }
+
+    static class NoWrapEditorKit extends StyledEditorKit {
+        @Override
+        public ViewFactory getViewFactory() {
+            return new NoWrapViewFactory();
+        }
+    }
+
+    static class NoWrapViewFactory implements ViewFactory {
+        @Override
+        public View create(Element elem) {
+            String kind = elem.getName();
+            if (kind != null) {
+                if (kind.equals(AbstractDocument.ContentElementName)) {
+                    return new LabelView(elem);
+                } else if (kind.equals(AbstractDocument.ParagraphElementName)) {
+                    return new ParagraphViewNoWrap(elem);
+                } else if (kind.equals(AbstractDocument.SectionElementName)) {
+                    return new BoxView(elem, View.Y_AXIS);
+                } else if (kind.equals(StyleConstants.ComponentElementName)) {
+                    return new ComponentView(elem);
+                } else if (kind.equals(StyleConstants.IconElementName)) {
+                    return new IconView(elem);
+                }
+            }
+            return new LabelView(elem);
+        }
+    }
+
+    static class ParagraphViewNoWrap extends ParagraphView {
+        public ParagraphViewNoWrap(Element elem) {
+            super(elem);
+        }
+
+        @Override
+        public void layout(int width, int height) {
+            super.layout(Integer.MAX_VALUE, height);
+        }
+
+        @Override
+        public float getMinimumSpan(int axis) {
+            return super.getPreferredSpan(axis);
+        }
     }
 
 }

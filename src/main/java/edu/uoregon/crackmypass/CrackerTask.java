@@ -16,7 +16,7 @@ public class CrackerTask implements Runnable {
     private Map<String, String> cracked = new HashMap<>();
 
     private static boolean running = false; // Whether the task is currently running or not
-    private long attempts = 0; // Current number of attempts we've made
+    private long attempts; // Current number of attempts we've made
     private long startTime;
     private HashFunction hasher = Hashing.md5();
 
@@ -28,6 +28,7 @@ public class CrackerTask implements Runnable {
     @Override
     public void run() {
         setRunning(true);
+        this.attempts = 0;
         this.startTime = System.currentTimeMillis();
 
         for (String word : words) {
@@ -51,7 +52,7 @@ public class CrackerTask implements Runnable {
                     System.out.println();
                     System.out.println("Cracked a hash: \"" + pswd + "\" -> " + hashes.get(index));
                     System.out.println("Total of " + cracked.size() + " found in " + totalMs + " ms");
-                    PanelOutput.addLine(pswd + " -> " + hashes.get(index));
+                    PanelOutput.addLine(pswd, hashes.get(index));
                     PanelOutput.setFoundAmount(cracked.size());
                 }
             }
