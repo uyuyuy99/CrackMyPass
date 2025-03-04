@@ -20,7 +20,7 @@ public class MainMenu extends JFrame {
     private PanelOutput panelOutput;
 
     public MainMenu() {
-        super("Crack Attack v" + Main.VERSION);
+        super("CrackMyPass v" + Main.VERSION);
 
         layout = new GridBagLayout();
         panel = new JPanel(layout);
