@@ -10,15 +10,19 @@ public class Appendage {
 
     private List<String> strings;
     private long min, max;
+    private boolean isText;
+
     private static final Pattern regex = Pattern.compile("^\\s*([0-9]+)\\s*-\\s*([0-9]+)\\s*$");
 
     // Appending/prepending a single string of text to the password
     public Appendage(String text) {
+        this.isText = true;
         this.strings = Collections.singletonList(text);
     }
 
     // Appending/prepending a series of numbers to the password
     public Appendage(long min, long max) {
+        this.isText = false;
         this.min = min;
         this.max = max;
         strings = new ArrayList<>();
@@ -50,6 +54,10 @@ public class Appendage {
         } else {
             return new Appendage(displayText);
         }
+    }
+
+    public boolean isText() {
+        return isText;
     }
 
 }

@@ -59,7 +59,7 @@ public class PanelLoadFiles extends JPanel {
         c.anchor = GridBagConstraints.EAST;
         c.insets = new Insets(12, 8, 12, 0);
         c.gridx = 0; c.gridy = 2;
-        btnLoadWords = new JButton("Load Dictionary");
+        btnLoadWords = new JButton("Load Words");
         btnLoadWords.setToolTipText("Load a custom dictionary file.");
         btnLoadWords.setIcon(new ImageIcon(ClassLoader.getSystemResource("icon/book.png")));
         btnLoadWords.setIconTextGap(10);

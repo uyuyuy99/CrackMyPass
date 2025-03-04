@@ -4,9 +4,9 @@ import edu.uoregon.crackmypass.menu.PanelStart;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 public class Cracker {
 
@@ -24,16 +25,32 @@ public class Cracker {
 
     // Settings
     private static List<Appendage> appends; // add strings/numbers to end of word
+    private static boolean appendBoth = false; // append text & numbers separately
     private static List<Appendage> prepends;// add strings/numbers to beginning of word
     private static boolean capFirst = true; // capitalize first letter
     private static boolean capAll = true; // capitalize all letters
     private static List<Pair<String, String>> replacements; // replaces strings in word
+    private static boolean tryOriginalWord = true; // whether to try the original word or not
 
     public static void startCracking() {
         // Create runnable task & create new thread to run it on
         CrackerTask crackerTask = new CrackerTask();
         crackingThread = Executors.newFixedThreadPool(1);
         crackingThread.submit(crackerTask);
+
+        System.out.println("Prepends:");
+        for (Appendage prepend : getPrepends()) {
+            for (String string : prepend.getStrings()) {
+                System.out.println("  '" + string + "'");
+            }
+        }
+
+        System.out.println("Appends:");
+        for (Appendage append : getAppends()) {
+            for (String string : append.getStrings()) {
+                System.out.println("  '" + string + "'");
+            }
+        }
     }
 
     public static void stopCracking() {
@@ -44,26 +61,17 @@ public class Cracker {
 
     public static List<String> getHashes() {
         if (hashes == null) {
-            try {
-                Path hashFilePath = Paths.get(ClassLoader.getSystemResource("3938.0.found").toURI());
-                hashes = Files.readAllLines(hashFilePath);
-                hashes.replaceAll(hash -> hash.substring(0, hash.indexOf(":")));
-                Collections.sort(hashes);
-            } catch (IOException | NullPointerException | URISyntaxException e) {
-                e.printStackTrace();
-            }
+            hashes = Util.readAllLines("3938.0.found");
+            hashes.replaceAll(hash -> hash.substring(0, hash.indexOf(":")));
+            Collections.sort(hashes);
         }
         return hashes;
     }
 
     public static List<String> getWords() {
         if (words == null) {
-            try {
-                Path dictFilePath = Paths.get(ClassLoader.getSystemResource("words.txt").toURI());
-                words = Files.readAllLines(dictFilePath);
-            } catch (IOException | NullPointerException | URISyntaxException e) {
-                e.printStackTrace();
-            }
+            words = Util.readAllLines("words.txt");
+            words.removeIf(String::isEmpty);
         }
         return words;
     }
@@ -92,7 +100,7 @@ public class Cracker {
         return true;
     }
 
-    public static List<Appendage> getAppends() {
+    public static synchronized List<Appendage> getAppends() {
         if (appends == null) {
             appends = new ArrayList<>();
             appends.add(new Appendage(0, 100));
@@ -107,7 +115,7 @@ public class Cracker {
         return appends;
     }
 
-    public static void setAppends(String[] lines) {
+    public static synchronized void setAppends(String[] lines) {
         appends.clear();
         for (String line : lines) {
             if (line.isEmpty()) continue;
@@ -115,7 +123,15 @@ public class Cracker {
         }
     }
 
-    public static List<Appendage> getPrepends() {
+    public static synchronized boolean isAppendBoth() {
+        return appendBoth;
+    }
+
+    public static synchronized void setAppendBoth(boolean appendBoth) {
+        Cracker.appendBoth = appendBoth;
+    }
+
+    public static synchronized List<Appendage> getPrepends() {
         if (prepends == null) {
             prepends = new ArrayList<>();
             prepends.add(new Appendage(0, 9));
@@ -126,7 +142,7 @@ public class Cracker {
         return prepends;
     }
 
-    public static void setPrepends(String[] lines) {
+    public static synchronized void setPrepends(String[] lines) {
         prepends.clear();
         for (String line : lines) {
             if (line.isEmpty()) continue;
@@ -134,23 +150,23 @@ public class Cracker {
         }
     }
 
-    public static boolean getCapFirst() {
+    public static synchronized boolean getCapFirst() {
         return capFirst;
     }
 
-    public static void setCapFirst(boolean capFirst) {
+    public static synchronized void setCapFirst(boolean capFirst) {
         Cracker.capFirst = capFirst;
     }
 
-    public static boolean getCapAll() {
+    public static synchronized boolean getCapAll() {
         return capAll;
     }
 
-    public static void setCapAll(boolean capAll) {
+    public static synchronized void setCapAll(boolean capAll) {
         Cracker.capAll = capAll;
     }
 
-    public static List<Pair<String, String>> getReplacements() {
+    public static synchronized List<Pair<String, String>> getReplacements() {
         if (replacements == null) {
             replacements = new ArrayList<>();
             replacements.add(Pair.of("s", "$"));
@@ -167,9 +183,17 @@ public class Cracker {
         return replacements;
     }
 
-    public static void setReplacements(List<Pair<String, String>> replacements) {
+    public static synchronized void setReplacements(List<Pair<String, String>> replacements) {
         replacements.removeIf(pair -> pair.getLeft().isEmpty());
         Cracker.replacements = replacements;
+    }
+
+    public static synchronized boolean getTryOriginalWord() {
+        return tryOriginalWord;
+    }
+
+    public static synchronized void setTryOriginalWord(boolean newValue) {
+        tryOriginalWord = newValue;
     }
 
     //    public static void setReplacements(Object[][] data) {

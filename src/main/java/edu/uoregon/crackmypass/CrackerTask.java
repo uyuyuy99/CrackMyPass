@@ -2,18 +2,11 @@ package edu.uoregon.crackmypass;
 
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
-import edu.uoregon.crackmypass.menu.MainMenu;
 import edu.uoregon.crackmypass.menu.PanelOutput;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.text.DecimalFormat;
 import java.util.*;
 
 public class CrackerTask implements Runnable {
@@ -87,10 +80,9 @@ public class CrackerTask implements Runnable {
             if (!word.equals(baseWord)) {
                 list.add(word);
             }
-//            list.remove(baseWord); // TODO testing
         }
 
-        // Add capitalized iterations
+        // Add capitalized permutations
         if (Cracker.getCapFirst()) {
             list.add(StringUtils.capitalize(baseWord));
         }
@@ -98,20 +90,51 @@ public class CrackerTask implements Runnable {
             list.add(baseWord.toUpperCase());
         }
 
-        // Add iterations w/ appendages
-        ListIterator<String> iter = list.listIterator();
-        while (iter.hasNext()) {
-            String word = iter.next();
+        // Add permutations w/ appendages
+        if (Cracker.isAppendBoth()) {
+            List<Appendage> textAppends = Cracker.getAppends().stream().filter(Appendage::isText).toList();
+            List<Appendage> numberAppends = Cracker.getAppends().stream().filter(a -> !a.isText()).toList();
 
-            for (Appendage append : Cracker.getAppends()) {
-                for (String string : append.getStrings()) {
-                    iter.add(word + string);
+            ListIterator<String> iter = list.listIterator();
+            while (iter.hasNext()) {
+                String plainWord = iter.next();
+                List<String> toAdd = new ArrayList<>();
+
+                for (Appendage append : textAppends) {
+                    for (String string : append.getStrings()) {
+                        toAdd.add(plainWord + string);
+                    }
+                }
+
+                ListIterator<String> iter2 = toAdd.listIterator();
+                while (iter2.hasNext()) {
+                    String word = iter2.next();
+
+                    for (Appendage append : numberAppends) {
+                        for (String string : append.getStrings()) {
+                            iter2.add(word + string);
+                        }
+                    }
+                }
+
+                for (String add : toAdd) iter.add(add);
+            }
+        }
+        else {
+            ListIterator<String> iter = list.listIterator();
+            while (iter.hasNext()) {
+                String word = iter.next();
+
+                for (Appendage append : Cracker.getAppends()) {
+                    for (String string : append.getStrings()) {
+                        iter.add(word + string);
+                    }
                 }
             }
         }
 
-        // Add iterations w/ prependages
-        iter = list.listIterator();
+        // Add permutations w/ prependages
+        ListIterator<String> iter = list.listIterator();
         while (iter.hasNext()) {
             String word = iter.next();
 
@@ -121,6 +144,17 @@ public class CrackerTask implements Runnable {
                 }
             }
         }
+
+        if (!Cracker.getTryOriginalWord()) {
+            list.remove(baseWord);
+            list.remove(StringUtils.capitalize(baseWord));
+            list.remove(baseWord.toUpperCase());
+        }
+
+//        System.out.println("Permutations for word '" + baseWord + "':");
+//        for (String word : list) {
+//            System.out.println("  " + word);
+//        }
 
         return list;
     }

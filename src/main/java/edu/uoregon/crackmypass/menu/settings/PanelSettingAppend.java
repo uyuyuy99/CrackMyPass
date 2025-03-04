@@ -2,7 +2,6 @@ package edu.uoregon.crackmypass.menu.settings;
 
 import edu.uoregon.crackmypass.Appendage;
 import edu.uoregon.crackmypass.Cracker;
-import edu.uoregon.crackmypass.menu.MainMenu;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +13,7 @@ public class PanelSettingAppend extends JPanel {
 
     private JScrollPane scrollPane;
     private JTextArea textArea;
+    private JCheckBox checkBoxAppendBoth;
 
     public PanelSettingAppend() {
         layout = new GridBagLayout();
@@ -37,6 +37,16 @@ public class PanelSettingAppend extends JPanel {
         scrollPane = new JScrollPane(textArea);
         c.insets = new Insets(0, 0, 0, 0);
         add(scrollPane, c);
+
+        c.gridx = 0; c.gridy = 2;
+        c.weightx = 0; c.weighty = 0;
+        checkBoxAppendBoth = new JCheckBox("Append both text AND numbers");
+        checkBoxAppendBoth.setToolTipText("Append both text AND numbers to end of each word, rather than choosing one or the other");
+        checkBoxAppendBoth.setSelected(Cracker.isAppendBoth());
+        add(checkBoxAppendBoth, c);
+        checkBoxAppendBoth.addActionListener((e) -> {
+            Cracker.setAppendBoth(checkBoxAppendBoth.isSelected());
+        });
 
         for (Appendage appendage : Cracker.getAppends()) {
             textArea.append(appendage.getDisplayText() + "\n");

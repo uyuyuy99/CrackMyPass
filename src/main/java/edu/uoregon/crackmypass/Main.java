@@ -1,16 +1,12 @@
 package edu.uoregon.crackmypass;
 
-import com.google.common.hash.Hashing;
 import edu.uoregon.crackmypass.menu.MainMenu;
 
 import javax.swing.*;
-import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Main {
 
-    public static String VERSION = "0.1";
+    public static String VERSION = "1.0";
 
     public static void main(String[] args) {
         try {
@@ -18,7 +14,6 @@ public class Main {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
-
         UIManager.put("DesktopPaneUI", "javax.swing.plaf.basic.BasicDesktopPaneUI");
 
         MainMenu gui = new MainMenu();
@@ -26,6 +21,7 @@ public class Main {
         gui.setSize(MainMenu.WIDTH, MainMenu.HEIGHT);
         gui.setVisible(true);
         gui.setLocationRelativeTo(null);
+        gui.setIconImage(new ImageIcon(ClassLoader.getSystemResource("icon/logo.png")).getImage());
     }
 
 }
