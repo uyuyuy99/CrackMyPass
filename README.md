@@ -10,6 +10,8 @@ Alternatively download a zip file of the repository with this link:
 
 Run using Java with your preferred IDE.
 
+You can also download an executable version of the app [here](https://github.com/uyuyuy99/CrackMyPass/releases/download/release/CrackMyPass.zip) (contains the CrackMyPass executable and manual)
+
 ## Interface
 The CrackMyPass runs a dictionary attack against a hash table of passwords and displays the passwords it cracks.
 
