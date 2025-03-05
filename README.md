@@ -2,18 +2,12 @@
 Interactive password cracking app to demonstrate the importance of strong passwords.
 
 ## Installation
-You can clone this repository onto your machine using
-`git clone https://github.com/uyuyuy99/CrackMyPass.git`
+Download the executable file [HERE](https://github.com/uyuyuy99/CrackMyPass/releases/download/release/CrackMyPass.zip)
 
-Alternatively download a zip file of the repository with this link:
-[CrackMyPass](https://github.com/uyuyuy99/CrackMyPass/archive/refs/heads/main.zip)
-
-Run using Java with your preferred IDE.
-
-You can also download an executable version of the app [here](https://github.com/uyuyuy99/CrackMyPass/releases/download/release/CrackMyPass.zip) (contains the CrackMyPass executable and manual)
+The README.pdf in the zip file will explain how to use it.
 
 ## Interface
-The CrackMyPass runs a dictionary attack against a hash table of passwords and displays the passwords it cracks.
+The CrackMyPass runs an enhanced dictionary attack against a hash table of passwords and displays the passwords it cracks.
 
 You can select a new dictionary to use for the attack from your file system using the **Load Dictionary** button.
 
