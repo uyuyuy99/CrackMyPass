@@ -2,7 +2,7 @@
 Interactive password cracking app to demonstrate the importance of strong passwords.
 
 ## Installation
-Download the executable file [HERE](https://github.com/uyuyuy99/CrackMyPass/releases/download/release/CrackMyPass.zip)
+Download the executable file [HERE](https://github.com/uyuyuy99/CrackMyPass/releases/download/release/CrackMyPass.zip).
 
 The README.pdf in the zip file will explain how to use it.
 
